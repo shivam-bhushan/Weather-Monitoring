@@ -38,9 +38,10 @@ export async function POST(request: NextRequest) {
             messasge: "Login Success",
             success: true,
         })
-
+        
         response.cookies.set("token", token, {
             httpOnly: true,
+            path: "/", // Make the cookie available to all routes
         })
 
         return response 

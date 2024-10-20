@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import toast, { Toast, Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { set } from 'mongoose'
 export default function Login() {
     const router = useRouter()
     const [user, setUser] = useState({
@@ -21,9 +22,12 @@ export default function Login() {
             console.log("Success ", response.data)
             router.push('/profile')
         } catch (error) {
+            setLoading(false)
+            setButtonDisable(false)
             if (error instanceof Error) {
                 console.log(error)
                 toast.error(error.message)
+
             }
             else {
                 toast.error("Something went wrong")
@@ -47,7 +51,7 @@ export default function Login() {
                 <input
                     type="email"
                     placeholder="Email"
-                    className="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-4 py-2 mt-2 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                     value={user.email}
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
                 />
@@ -55,7 +59,7 @@ export default function Login() {
                 <input
                     type="password"
                     placeholder="Password"
-                    className="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-4 py-2 mt-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
                     value={user.password}
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
                 />

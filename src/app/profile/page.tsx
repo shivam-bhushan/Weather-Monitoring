@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Cog, Sun, CloudRain } from "lucide-react";
@@ -6,6 +7,7 @@ import axios from "axios";
 import Link from "next/link";
 import { toast } from 'react-hot-toast'
 import { useRouter } from "next/navigation";
+import { cookies } from "next/headers";
 
 export default function MainPage() {
     const router = useRouter()
@@ -55,7 +57,7 @@ export default function MainPage() {
         async function fetchAlerts() {
             try {
                 // Fetch the alerts from the backend
-                const response = await axios.get('http://localhost:3000/alerts');
+                const response = await axios.get('http://localhost:3004/alerts');
                 console.log('Alerts fetched:', response.data); // Log the response to verify
                 setNotifications(response.data);
             } catch (error) {
@@ -80,6 +82,24 @@ export default function MainPage() {
         }
     }
 
+    const getUserId = async () => {
+        try {
+            const tokenFromCookie = document.cookie
+                .split('; ')
+                .find((row) => row.startsWith('token='))
+                ?.split('=')[1];
+            const response = await axios.post('/api/users/me')
+            console.log(response.data)
+            const userId = response.data._id
+            return userId
+        } catch (err) {
+            if (err instanceof Error) {
+                toast.error(err.message)
+            } else {
+                toast.error("Unexpeced Error")
+            }
+        }
+    }
 
     return (
         <div className="bg-black text-white p-8 h-screen w-screen">
@@ -167,7 +187,7 @@ export default function MainPage() {
                     </div>
                     <div className="space-y-4">
                         {notifications.length > 0 ? (
-                            notifications.map((notification, index) => (
+                            notifications.slice(0, 5).map((notification, index) => (
                                 <div key={index}>
                                     <p className="font-semibold">{notification.message}</p>
                                     <p className="text-sm text-gray-400">{new Date(notification.timestamp).toLocaleString()}</p>
