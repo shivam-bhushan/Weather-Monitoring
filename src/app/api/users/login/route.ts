@@ -3,19 +3,13 @@ import User from '@/models/userModel'
 import {NextRequest, NextResponse} from 'next/server'
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { setCorsHeaders } from '../../../utils/cors'; // Import the CORS utility function
+
 
 
 connect()
 
 export async function POST(request: NextRequest) {
-        if (request.method === 'OPTIONS') {
-          setCorsHeaders(res);
-          return res.status(200).end();
-        }
     try{
-        setCorsHeaders(res);
-
         const reqBody = await request.json()
         const {email, password} = reqBody
 
